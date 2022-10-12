@@ -21130,16 +21130,12 @@ with pkgs;
 
   mkNvidiaContainerPkg = { name, containerRuntimePath, configTemplate, additionalPaths ? [] }:
     let
-      nvidia-container-runtime = callPackage ../applications/virtualization/nvidia-container-runtime {
-        inherit containerRuntimePath configTemplate;
-      };
     in symlinkJoin {
       inherit name;
       paths = [
         (callPackage ../applications/virtualization/libnvidia-container { })
-        nvidia-container-runtime
         (callPackage ../applications/virtualization/nvidia-container-toolkit {
-          inherit nvidia-container-runtime;
+          inherit containerRuntimePath configTemplate;
         })
       ] ++ additionalPaths;
     };
